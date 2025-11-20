@@ -67,9 +67,12 @@ version_info = ({})
 
 
 def get_version():
-    with open(version_file, 'r') as f:
-        exec(compile(f.read(), version_file, 'exec'))
-    return locals()['__version__']
+    version_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'realesrgan', 'version.py')
+    with open(version_file, 'r', encoding='utf-8') as f:
+        match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", f.read(), re.MULTILINE)
+        if match:
+            return match.group(1)
+        raise RuntimeError('Unable to find version string.')
 
 
 def get_requirements(filename='requirements.txt'):
